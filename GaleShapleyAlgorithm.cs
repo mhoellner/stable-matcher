@@ -1,6 +1,6 @@
 namespace StableMatcher
 {
-    public static class Utils
+    public static class GaleShapleyAlgorithm
     {
         /** Converts from a preference matrix to a ranked-preference matrix, i.e. 
          * converts from vector elements showing preferences sorted by column
@@ -33,7 +33,7 @@ namespace StableMatcher
         }
 
         // Gale-Shapley Stable Matching Algorithm
-        public static int[] FindStableMatchesUsingGaleShapleyAlgorithm(int[,] proposerPrefs, int[,] accepterPrefs)
+        public static int[] FindStableMatches(int[,] proposerPrefs, int[,] accepterPrefs)
         {
             int size = proposerPrefs.GetLength(1);
             int[,] rank = GetRankedMatrixWithDummy(accepterPrefs);

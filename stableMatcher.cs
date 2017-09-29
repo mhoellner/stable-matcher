@@ -11,11 +11,11 @@ namespace StableMatcher
             int[,] womenPrefs = Examples.Moodle5Women; //SampleWomen;
 
             Console.WriteLine("Show preferences for men");
-            ShowPrefs(menPrefs);
+            DisplayPreferences(menPrefs);
             Console.WriteLine("Show preferences for women");
-            ShowPrefs(womenPrefs);
+            DisplayPreferences(womenPrefs);
 
-            int[] fiancee = Utils.FindStableMatchesUsingGaleShapleyAlgorithm(menPrefs, womenPrefs);
+            int[] fiancee = GaleShapleyAlgorithm.FindStableMatches(menPrefs, womenPrefs);
             //show results            
             Console.WriteLine("Solution to stable matching problem:");
             for (int i = 0; i < fiancee.Length; i++)
@@ -26,7 +26,7 @@ namespace StableMatcher
             Console.ReadKey();
         }
 
-        public static void ShowPrefs(int[,] prefs)
+        public static void DisplayPreferences(int[,] prefs)
         {
             int size = prefs.GetLength(0);
             for (int row = 0; row < size; row++)

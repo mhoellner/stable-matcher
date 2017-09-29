@@ -2,11 +2,14 @@ namespace StableMatcher
 {
     public static class GaleShapleyAlgorithm
     {
-        /** Converts from a preference matrix to a ranked-preference matrix, i.e. 
-         * converts from vector elements showing preferences sorted by column
-         * to vector elements were each element shows their particular order in the array 
-         * Example: Prefs = [4,0,3,1,2] -> RankedPrefs = [1,3,4,2,0]
-         */
+        /// <summary>
+        /// Converts from a preference matrix to a ranked-preference matrix, i.e. 
+        /// converts from vector elements showing preferences sorted by column
+        /// to vector elements were each element shows their particular order in the array 
+        /// Example: Prefs = [4,0,3,1,2] -> RankedPrefs = [1,3,4,2,0]
+        /// </summary>
+        /// <param name="preferenceMatrix"></param>
+        /// <returns></returns>
         public static int[,] GetRankedMatrixWithDummy(int[,] preferenceMatrix)
         {
             int size = preferenceMatrix.GetLength(1);
@@ -32,7 +35,12 @@ namespace StableMatcher
             return rank;
         }
 
-        // Gale-Shapley Stable Matching Algorithm
+        /// <summary>
+        /// Gale-Shapley Stable Matching Algorithm
+        /// </summary>
+        /// <param name="proposerPrefs">preferences of the proposing part</param>
+        /// <param name="accepterPrefs">preferences of the accepting part</param>
+        /// <returns></returns>
         public static int[] FindStableMatches(int[,] proposerPrefs, int[,] accepterPrefs)
         {
             int size = proposerPrefs.GetLength(1);
@@ -40,10 +48,12 @@ namespace StableMatcher
 
             //start stable marriage algorithm
             int[] fiancee = new int[size];
-            int[] next = new int[size];  //to track the next in the list of women candidates
+            //to track the next in the list of women candidates
+            int[] next = new int[size];
 
             for (int i = 0; i < size; i++)
-            {  //start counters to zero index
+            {
+                //start counters to zero index
                 fiancee[i] = size;
                 next[i] = -1;
             }

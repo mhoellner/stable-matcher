@@ -1,3 +1,5 @@
+using System;
+
 namespace StableMatcher
 {
     public static class GaleShapleyAlgorithm
@@ -10,7 +12,7 @@ namespace StableMatcher
         /// </summary>
         /// <param name="preferenceMatrix"></param>
         /// <returns></returns>
-        public static int[,] GetRankedMatrixWithDummy(int[,] preferenceMatrix)
+        private static int[,] GetRankedMatrixWithDummy(int[,] preferenceMatrix)
         {
             int size = preferenceMatrix.GetLength(1);
 
@@ -37,12 +39,17 @@ namespace StableMatcher
 
         /// <summary>
         /// Gale-Shapley Stable Matching Algorithm
+        /// The Preference Matrices need to be of the same size
         /// </summary>
         /// <param name="proposerPrefs">preferences of the proposing part</param>
         /// <param name="accepterPrefs">preferences of the accepting part</param>
         /// <returns></returns>
         public static int[] FindStableMatches(int[,] proposerPrefs, int[,] accepterPrefs)
         {
+            if (proposerPrefs.GetLength(1) != accepterPrefs.GetLength(1))
+            {
+                throw new Exception("The Preference Matrices doesn't have the same dimensions");
+            }
             int size = proposerPrefs.GetLength(1);
             int[,] rank = GetRankedMatrixWithDummy(accepterPrefs);
 

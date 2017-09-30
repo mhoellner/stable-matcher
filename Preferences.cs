@@ -4,52 +4,89 @@ namespace StableMatcher
 {
     public static class Preferences
     {
+        /// <summary>
+        /// Opens the file provided by the absolutePath argument.
+        /// Parses the SPACE separated integers into an array.
+        /// </summary>
+        /// <param name="absolutePath">The absolute path to the text file with the values.</param>
+        /// <returns>The parsed values in the file in an array</returns>
         public static int[,] GetPreferencesFromFile(string absolutePath)
         {
             if (!File.Exists(absolutePath))
             {
                 throw new FileNotFoundException();
             }
-
-            var file = File.Open(absolutePath, FileMode.Open);
-            var reader = new StreamReader(file);
+            
             int[,] array = { };
             var isFirstLine = true;
             var personIndex = 0;
 
-            while (!reader.EndOfStream)
+            using (var reader = new StreamReader(File.Open(absolutePath, FileMode.Open)))
             {
-                var line = reader.ReadLine();
-                if (!string.IsNullOrEmpty(line))
+                while (!reader.EndOfStream)
                 {
-                    var items = line.Split(' ');
-
-                    if (isFirstLine)
+                    var line = reader.ReadLine();
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        isFirstLine = false;
-                        array = new int[items.Length, items.Length];
-                    }
+                        var items = line.Split(' ');
 
-                    var prefIndex = 0;
-                    foreach (var item in items)
-                    {
-                        int parsed;
-                        if (int.TryParse(item, out parsed))
+                        // initializes the array on the first iteration with the number of elements in the first line
+                        if (isFirstLine)
                         {
-                            if (parsed < 0 || parsed >= items.Length)
+                            isFirstLine = false;
+                            array = new int[items.Length, items.Length];
+                            for (var i = 0; i < items.Length; i++)
                             {
-                                throw new FileLoadException();
+                                for (var j = 0; j < items.Length; j++)
+                                {
+                                    array[i, j] = -1;
+                                }
                             }
-                            array[personIndex, prefIndex] = parsed;
-                            prefIndex++;
                         }
-                        else
+
+                        // throws an error if the file has more lines with values than values in the first row
+                        if (personIndex >= array.GetLength(1))
                         {
                             throw new FileLoadException();
                         }
+
+                        var prefIndex = 0;
+                        foreach (var item in items)
+                        {
+                            int parsed;
+                            // throws an error if the parsed value is no integer
+                            if (int.TryParse(item, out parsed))
+                            {
+                                // throws an error if the parsed value is not valid
+                                if (parsed < 0 || parsed >= array.GetLength(1))
+                                {
+                                    throw new FileLoadException();
+                                }
+                                // throws an error if a line has more values than the first line
+                                if (prefIndex >= array.GetLength(1))
+                                {
+                                    throw new FileLoadException();
+                                }
+                                array[personIndex, prefIndex] = parsed;
+                                prefIndex++;
+                            }
+                            else
+                            {
+                                throw new FileLoadException();
+                            }
+                        }
                     }
+                    personIndex++;
                 }
-                personIndex++;
+            }
+
+            // throws an error if a line had not enough values for all fields of the array
+            foreach (var i in array)
+            {
+                if (i == -1)
+                {
+                    throw new FileLoadException();
+                }
             }
             return array;
         }
